@@ -4,22 +4,30 @@ export default function ContactForm() {
   const [responseData, setResponseData] = useState(null);
   const [state, setState] = useState({ submitting: false });
 
+  const rHeaders = new Headers({
+    Authorization: `Bearer ${process.env.HF_API_TOKEN}`,
+    "Content-Type": "text/plain",
+  });
   const onSubmit = async (event) => {
     event.preventDefault();
 
     setState({ submitting: true });
-
-    const response = await fetch("https://gpt-detector.ateeqend.workers.dev/", {
+    const requestOptions = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: event.target.message.value }),
-      mode: "cors",
-    });
+      headers: rHeaders,
+      body: event.target.message.value,
+      redirect: "follow",
+    };
+    const url =
+      "https://api-inference.huggingface.co/models/roberta-base-openai-detector";
 
-    const result = await response.json();
-    setResponseData(result);
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+
+    // const result = await response.json();
+    // setResponseData(result);
     setState({ submitting: false });
   };
 
