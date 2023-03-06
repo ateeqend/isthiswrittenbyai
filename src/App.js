@@ -1,5 +1,5 @@
 import React from "react";
-import ContactForm from "./ContactForm";
+import DetectionForm from "./DetectionForm";
 import logo from "./logo.svg";
 import "./App.css";
 
@@ -8,15 +8,11 @@ function App() {
     <div className="App">
       <nav>
         <img src={logo} alt="logo" />
-        <ul>
-          <li>
-            <a href="/">Home</a>
-          </li>
-        </ul>
+        <ul></ul>
       </nav>
       <main>
-        <h1>Contact Form</h1>
-        <ContactForm />
+        <h1>Is this Written by GPT?</h1>
+        <DetectionForm />
       </main>
     </div>
   );
