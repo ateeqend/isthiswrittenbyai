@@ -73,6 +73,12 @@ main ul li {
   vertical-align: middle;
 }
 
+footer {
+  max-width: 990px;
+  margin: 0 auto;
+  padding: 25px;
+}
+
 h1 {
   font-size: 32px;
   margin-bottom: 20px;
@@ -141,6 +147,7 @@ ul.resultChunk {
   list-style: none;
   margin: 0;
   padding: 0;
+  border-bottom: 2px solid #bebdbd;
 }
 
 ul.resultChunk li,

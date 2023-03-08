@@ -3,6 +3,7 @@ import { useCookies } from "react-cookie";
 
 function DetectionForm() {
   const [text, setText] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [chunks, setChunks] = useState([]);
   const [isCheckedAcknowledge, setIsCheckedAcknowledge] = useState(false);
   const [isCheckedTerms, setIsCheckedTerms] = useState(false);
@@ -27,17 +28,30 @@ function DetectionForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    const response = await fetch("https://model.gptwritten.com/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
+    try {
+      const response = await fetch("https://model.gptwritten.com/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
 
-    const data = await response.json();
-    setChunks(data);
-    setIsLoading(false);
+      if (!response.ok) {
+        setErrorMsg(response.error);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setChunks(data);
+      setErrorMsg("");
+    } catch (error) {
+      console.error(error);
+      setChunks([]);
+      setErrorMsg(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renderChunk = (chunk, index) => {
@@ -64,6 +78,7 @@ function DetectionForm() {
         <div>
           <textarea
             id="text"
+            placeholder="Identify standard output from GPT AI tool. Minimum 120 characters are required."
             value={text}
             onChange={(event) => setText(event.target.value)}
           />
@@ -113,7 +128,9 @@ function DetectionForm() {
         </div>
         <button
           type="submit"
-          disabled={!isCheckedAcknowledge || !isCheckedTerms}
+          disabled={
+            !isCheckedAcknowledge || !isCheckedTerms || !text.length < 120
+          }
         >
           Check Results
         </button>
@@ -126,6 +143,7 @@ function DetectionForm() {
           <ul>{chunks.map((chunk, index) => renderChunk(chunk, index))}</ul>
         </div>
       </form>
+      {errorMsg && <div className="error">{errorMsg}</div>}
     </div>
   );
 }
