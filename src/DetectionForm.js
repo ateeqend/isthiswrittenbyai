@@ -129,11 +129,21 @@ function DetectionForm() {
         <button
           type="submit"
           disabled={
-            !isCheckedAcknowledge || !isCheckedTerms || !text.length < 120
+            !isCheckedAcknowledge || !isCheckedTerms || text.length < 120
+          }
+          title={
+            !isCheckedAcknowledge
+              ? "Please acknowledge that sometimes a human-written text can be mistakenly classified as AI text."
+              : !isCheckedTerms
+              ? "Please agree to the terms and conditions."
+              : text.length < 120
+              ? "Please enter at least 120 characters."
+              : ""
           }
         >
           Check Results
         </button>
+
         {isLoading && <div className="loader"></div>}
         <div>
           <ul class="resultChunk resultHeader">
